@@ -2,12 +2,13 @@
 
 def leer_archivo(ruta):
     resultado = True;
+    ruta= "parser/" + ruta
     try:
         with open(ruta, 'r') as archivo:
             for linea in archivo:
-                print(linea.strip())
+                None
     except FileNotFoundError:
-        print(f"TEl archivo en la {ruta} no se encontró")
+        print(f"El archivo en la {ruta} no se encontró")
     except Exception as e:
         print(f"Un error ocurrió: {e}")
 
