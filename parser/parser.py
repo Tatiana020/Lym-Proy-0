@@ -7,9 +7,9 @@ def leer_archivo(ruta):
             for linea in archivo:
                 print(linea.strip())
     except FileNotFoundError:
-        print(f"TEl archivo en la {ruta} no se encontro")
+        print(f"TEl archivo en la {ruta} no se encontró")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Un error ocurrió: {e}")
 
 def leer_variables(linea):
     return True
