@@ -20,3 +20,11 @@ def leer_proc(linea):
 
 def leer_codigo(linea):
     return True
+
+def es_alfabetico(caracter):
+    return caracter.isalpha()
+
+def es_numerico(caracter):
+    return caracter.isdigit()
+
+leer_archivo("ejemploPrueba.txt")
