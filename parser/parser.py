@@ -1,4 +1,4 @@
-import variables.py
+import variables as variables
 
 def leer_archivo(ruta):
     resultado = True;
@@ -13,8 +13,8 @@ def leer_archivo(ruta):
         print(f"Un error ocurrió: {e}")
 
 def leer_variables(linea):
-    if variables_manager.procesar_variables(linea):
-        print(f"Variables registradas: {list(variables_manager.obtener_variables().keys())}")
+    if variables.procesar_variables(linea):
+        print(f"Variables registradas: {list(variables.obtener_variables().keys())}")
         return True
     else:
         print(f"Error en declaración de variables: {linea}")
