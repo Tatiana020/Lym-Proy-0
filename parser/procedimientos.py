@@ -1,9 +1,12 @@
 procedimientos_definidos = {}
 
+procedimientos_permitidos = ["goNorth", "goWest", "putChips", "pickChips", "move", "turn"]
+
+
 def procesar_procedimiento(linea):
     global procedimientos_definidos
 
-    # Verificar que la linea empieza con proc y contiene "[ ... ]"
+    # Verificar que la linea empieza con proc y contiene "[  ]"
     if not (linea.startswith("proc") and "[" in linea and "]" in linea):
         print("La línea no es un procedimiento válido")
         return False
@@ -22,13 +25,17 @@ def procesar_procedimiento(linea):
 
     nombre_proc, parametros = encabezado.replace("proc", "").strip().split(":", 1)
 
-    # Limpiar espacios y dividir los parámetros
+    # Limpiar espacios 
     nombre_proc = nombre_proc.strip()
     parametros = parametros.strip().split() 
 
     # Verificar que el nombre del procedimiento es valido 
     if not nombre_proc.isidentifier():
         print(f"Nombre de procedimiento inválido '{nombre_proc}'")
+        return False
+
+    if nombre_proc not in procedimientos_permitidos:
+        print(f"Error: El procedimiento '{nombre_proc}' no está permitido según el enunciado.")
         return False
 
     # Guardar 
