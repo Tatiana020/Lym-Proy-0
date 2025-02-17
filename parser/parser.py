@@ -1,4 +1,5 @@
 import variables as variables
+import procedimientos as procedimientos
 
 def leer_archivo(ruta):
     resultado = True;
@@ -21,6 +22,12 @@ def leer_variables(linea):
         return False
 
 def leer_proc(linea):
+    if procedimientos.procesar_procedimiento(linea):
+        print(f"Procedimiento registrado: {list(procedimientos.obtener_procedimientos().keys())}")
+        return True 
+    else:
+        print(f"Error en declaración de procedimiento: {linea}")
+        return False  # Devuelve False si hay un error
     return True
 
 def leer_codigo(linea):
