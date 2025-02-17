@@ -27,7 +27,7 @@ def leer_proc(linea):
         return True 
     else:
         print(f"Error en declaración de procedimiento: {linea}")
-        return False  # Devuelve False si hay un error
+        return False 
     return True
 
 def leer_codigo(linea):
