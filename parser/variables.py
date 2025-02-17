@@ -2,7 +2,6 @@ variables_globales = {}
 
 def procesar_variables(linea):
     global variables_globales
-
     if not (linea.startswith("|") and linea.endswith("|")):
         print("La declaración de variables debe estar entre | ... |")
         return False

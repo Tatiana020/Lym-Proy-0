@@ -29,6 +29,18 @@ def leer_proc(linea):
         print(f"Error en declaración de procedimiento: {linea}")
         return False 
     return True
+def leer_asignacion(linea):
+    resultado = True
+    tokens = linea.split(" ")
+    if tokens.lenght > 4:
+        resultado = False
+    if tokens [-1] != ".":
+        resultado = False
+    if tokens[-2] not in variables or (not int(tokens[-2])):
+        resultado = False  
+    if tokens [3,4] != ":=":
+        resultado = False
+    return resultado
 
 def leer_codigo(linea):
     return True
