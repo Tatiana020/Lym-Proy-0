@@ -35,13 +35,17 @@ def leer_variables(linea):
         return False
 
 def leer_proc(linea):
-    if procedimientos.procesar_procedimiento(linea):
+
+    reultado = procedimientos.procesar_procedimiento(linea)
+    
+    if resultado:
         print(f"Procedimiento registrado: {list(procedimientos.obtener_procedimientos().keys())}")
         return True 
     else:
-        print(f"Error en declaración de procedimiento: {linea}")
+        print(f"Error en declaración de procedimiento")
         return False 
-    return True
+
+
 def leer_asignacion(linea):
     resultado = True
     tokens = linea.split(" ")
