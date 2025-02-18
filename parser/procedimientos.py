@@ -2,7 +2,7 @@ import variables as v
 
 procedimientos_definidos = {}
 
-def procesar_procedimiento(archivo):
+def procesar_procedimiento(archivo, detallado=False):
 
     global procedimientos_definidos
     from parser import for_para_recursion  
@@ -18,17 +18,22 @@ def procesar_procedimiento(archivo):
 
         if linea.startswith("proc"):
             dentro_del_procedimiento = True
-            encabezado = linea  # Guardamos la primera línea 
-            continue 
+            encabezado = linea  
+            if detallado:
+                print(f"Encabezado detectado -> '{encabezado}'")  
+            continue  
 
         if dentro_del_procedimiento:
-            if linea != "":  # Evita agregar líneas vacías
+            if linea != "":  
                 lineas_procedimiento.append(linea)
                 corchetes_abiertos += linea.count("[")
                 corchetes_abiertos -= linea.count("]")
 
         if dentro_del_procedimiento and corchetes_abiertos == 0:
-            dentro_del_procedimiento = False  # Termina de leer 
+            dentro_del_procedimiento = False  
+
+            if detallado:
+                print(f"Encabezado antes de procesar -> '{encabezado}'")
 
             encabezado = encabezado.replace("proc", "", 1).strip()
             if ":" in encabezado:
@@ -36,12 +41,14 @@ def procesar_procedimiento(archivo):
                 nombre_proc = nombre_proc.strip()
                 parametros = parametros.strip().split()
             else:
-                print(f"Procedimiento sin parámetros detectado {encabezado}")
+                if detallado:
+                    print(f"Procedimiento sin parámetros detectado -> '{encabezado}'")
                 nombre_proc = encabezado.replace("[", "").strip()
-                parametros = [] 
+                parametros = []  
 
             if not nombre_proc.isidentifier():
-                print(f"Nombre de procedimiento inválido {nombre_proc}")
+                if detallado:
+                    print(f"Error: Nombre de procedimiento inválido '{nombre_proc}'")
                 return False
 
             procedimientos_definidos[nombre_proc] = {
@@ -49,8 +56,9 @@ def procesar_procedimiento(archivo):
                 "cuerpo": lineas_procedimiento
             }
 
-            print(f"Procedimiento registrado: {nombre_proc} con parámetros {parametros}")
-            print(f"ontenido del procedimiento: {lineas_procedimiento}")
+            if detallado:
+                print(f"Procedimiento registrado: {nombre_proc} con parámetros {parametros}")
+                print(f"Contenido del procedimiento: {lineas_procedimiento}")
 
             for linea_codigo in lineas_procedimiento:
                 for_para_recursion([linea_codigo])  
@@ -59,6 +67,10 @@ def procesar_procedimiento(archivo):
             corchetes_abiertos = 0
 
     return True  
+
+def obtener_procedimientos():
+    return procedimientos_definidos
+
 
 def obtener_procedimientos():
     return procedimientos_definidos
