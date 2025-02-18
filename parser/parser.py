@@ -21,7 +21,7 @@ def for_para_recursion(archivo):
             if token == "|":
                 leer_variables(linea)
             elif token == "proc":
-                leer_proc(linea)
+                leer_proc(archivo)
             elif token == "[":
                 leer_codigo(linea)
             else:
@@ -41,14 +41,19 @@ def leer_proc(archivo):
 def leer_asignacion(linea):
     resultado = True
     tokens = linea.split(" ")
-    if tokens.lenght > 4:
+
+    if len(tokens) > 4:
         resultado = False
-    if tokens [-1] != ".":
+
+    if len(tokens) < 2 or tokens[-1] != ".":  
         resultado = False
-    if tokens[-2] not in variables or (not int(tokens[-2])):
+
+    if len(tokens) > 1 and (tokens[-2] not in variables.obtener_variables() or not tokens[-2].isdigit()):
         resultado = False  
-    if tokens [3,4] != ":=":
+
+    if len(tokens) > 4 and tokens[3:5] != [":=", "valor"]:  
         resultado = False
+
     return resultado
 
 def leer_codigo(linea):
