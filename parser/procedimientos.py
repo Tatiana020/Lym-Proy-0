@@ -19,6 +19,10 @@ def procesar_procedimiento(archivo, detallado=False):
             dentro_del_procedimiento = True
             encabezado = linea.replace("proc", "", 1).strip()
             continue  
+        
+        if not dentro_del_procedimiento:
+            print(f"Error: Se encontró código fuera de un procedimiento -> '{linea}'")
+            return False
 
         if dentro_del_procedimiento:
             if linea != "":  
@@ -29,6 +33,10 @@ def procesar_procedimiento(archivo, detallado=False):
         if dentro_del_procedimiento and corchetes_abiertos == 0:
             dentro_del_procedimiento = False  
 
+            if not encabezado or "[" not in encabezado:
+                print(f"Error: Procedimiento mal definido, falta '[' -> '{encabezado}'")
+                return False
+
             if ":" in encabezado:
                 nombre_proc, parametros = encabezado.split(":", 1)
                 nombre_proc = nombre_proc.strip()
@@ -38,6 +46,11 @@ def procesar_procedimiento(archivo, detallado=False):
                 parametros = []  
 
             if not nombre_proc.isidentifier():
+                print(f"Error: Nombre de procedimiento inválido -> '{nombre_proc}'")
+                return False
+
+            if corchetes_abiertos != 0:
+                print(f"Error: Corchetes desbalanceados en procedimiento -> '{nombre_proc}'")
                 return False
 
             procedimientos_definidos[nombre_proc] = {
@@ -55,11 +68,8 @@ def procesar_procedimiento(archivo, detallado=False):
             lineas_procedimiento = []
             corchetes_abiertos = 0
 
+    print("Todos los procedimientos procesados correctamente.")
     return True  
-
-def obtener_procedimientos():
-    return procedimientos_definidos
-
 
 def obtener_procedimientos():
     return procedimientos_definidos
