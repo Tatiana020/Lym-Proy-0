@@ -6,13 +6,26 @@ def leer_archivo(ruta):
     ruta= "parser/" + ruta
     try:
         with open(ruta, 'r') as archivo:
-            for linea in archivo:
-                None
+            for_para_recursion(archivo)    
     except FileNotFoundError:
         print(f"El archivo en la {ruta} no se encontró")
     except Exception as e:
         print(f"Un error ocurrió: {e}")
 
+def for_para_recursion(archivo):
+    resultado = True
+    for linea in archivo:
+        tokens = linea.split(" ")
+        for token in tokens:
+            if token == "|":
+                leer_variables(linea)
+            elif token == "proc":
+                leer_proc(linea)
+            elif token == "[]":
+                        resultado = leer_codigo(linea)
+            else:
+                resultado = False
+    
 def leer_variables(linea):
     if variables.procesar_variables(linea):
         print(f"Variables registradas: {list(variables.obtener_variables().keys())}")

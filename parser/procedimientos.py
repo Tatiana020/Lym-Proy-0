@@ -1,11 +1,6 @@
 import variables as v
 procedimientos_definidos = {}
 
-procedimientos_permitidos = ["goNorth", "goWest", "putChips", "turnLeft","turnRight",
-                             "turnAround", "faceNorth","FaceSouth","FaceWest","FaceEast","putChips",
-                             "putBallons","pickBallons","pickChips", "moveFront","moveBack","moveRight",
-                             "moveLeft","moveO","jumpFront","jumpBack","jumpRight","jumpLeft","jumpO", "nop"]
-
 
 def procesar_procedimiento(linea):
     global procedimientos_definidos
@@ -36,10 +31,6 @@ def procesar_procedimiento(linea):
     # Verificar que el nombre del procedimiento es valido 
     if not nombre_proc.isidentifier():
         print(f"Nombre de procedimiento inválido '{nombre_proc}'")
-        return False
-
-    if nombre_proc not in procedimientos_permitidos:
-        print(f"Error: El procedimiento '{nombre_proc}' no está permitido según el enunciado.")
         return False
 
     # Guardar 
