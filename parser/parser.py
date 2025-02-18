@@ -35,14 +35,8 @@ def leer_variables(linea):
         print(f"Error en declaración de variables: {linea}")
         return False
 
-def leer_proc(linea):
-    if procedimientos.procesar_procedimiento(linea):
-        print(f"Procedimiento registrado: {list(procedimientos.obtener_procedimientos().keys())}")
-        return True 
-    else:
-        print(f"Error en declaración de procedimiento: {linea}")
-        return False 
-    return True
+def leer_proc(archivo):
+    return procedimientos.procesar_procedimiento(archivo, detallado=True)
 
 def leer_asignacion(linea):
     resultado = True
