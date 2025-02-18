@@ -3,30 +3,52 @@ condiciones_permitidas = ["facing","canPut","canPick","canMove","canJump","not"]
 cardinales = ["#north", "#south", "#west", "#east"]
 chips = [ "#ballons", "#chips"]
 directions =["#north", "#south", "#west", "#east"]
+funciones_permitidas = ["goTo","turn","face","put","pick","move","jump","nop", "if", "while", "for"]
+
+def reconocer_codigo(linea):
+    tokens = linea.split(" ")
+    token = tokens[0]
+    if token in funciones_permitidas:
+        return reconocer_funcion(linea)
+    if token in condiciones_permitidas:
+        return reconocer_condicion(linea)
+
+    
 def reconocer_funcion(linea):
     tokens = linea.split(" ")
-    token=tokens[1]
-    resultado=True
+    token = tokens[0]
     if token == "goTo":
-        resultado = leer_goto(token)
-    if token == "turn":
-        resultado = leer_turn(token)
-    if token == "face":
-        resultado = leer_face(token)
-    if token == "put":
-        resultado = leer_put(token)
-    if token == "pick":
-        resultado = leer_pick(token)
-    if token == "move":
-        resultado = leer_move(token)
-    if token == "jump":
-        resultado = leer_jump(token)
-    if token == "nop":
-        resultado = leer_nop(token)
-    else:
-        resultado = False
+            resultado = leer_goto(linea)
+    elif token == "turn":
+            resultado = leer_turn(linea)
+    elif token == "face":
+            resultado = leer_face(linea)
+    elif token == "put":
+            resultado = leer_put(linea)
+    elif token == "pick":
+            resultado = leer_pick(linea)
+    elif token == "move":
+            resultado = leer_move(linea)
+    elif token == "jump":
+            resultado = leer_jump(linea)
+    elif token == "nop":
+            resultado = leer_nop(linea)
     return resultado
 
+def reconocer_condicion(linea):
+    tokens = linea.split(" ")
+    token=tokens[0]
+    resultado=True
+    if token == "facing" or "canMove" or "canPut" or "canPick" or "canJump" or "not":
+        resultado = leer_condicion(linea)
+    elif token == "if":
+        resultado = leer_condicional(linea)
+    elif token == "while":
+        resultado = leer_bucle(linea)
+    elif token == "for":
+        resultado = leer_repeticion(linea)
+    return resultado
+        
 #Acciones
 def leer_goto(linea):
     tokens = linea.split(" ")
@@ -123,7 +145,7 @@ def leer_repeticion(linea):
 def leer_condicion(linea):
     tokens = linea.split(" ")
     if len(tokens) == 3 and tokens[0] in ["facing:", "canMove:"] and tokens[2] == ".":
-        if tokens[0] == "facing:" and tokens[1] in ["#north", "#south", "#west", "#east"]:
+        if tokens[0] == "facing:" and tokens[1] in cardinales:
             return True
         if tokens[0] == "canMove:" and tokens[1].isdigit():
             return True

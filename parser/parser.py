@@ -1,5 +1,6 @@
 import variables as variables
 import procedimientos as procedimientos
+import codigo
 
 def leer_archivo(ruta):
     resultado = True;
@@ -21,10 +22,10 @@ def for_para_recursion(archivo):
                 leer_variables(linea)
             elif token == "proc":
                 leer_proc(linea)
-            elif token == "[]":
-                        resultado = leer_codigo(linea)
+            elif token == "[":
+                leer_codigo(linea)
             else:
-                resultado = False
+                leer_asignacion(linea)
     
 def leer_variables(linea):
     if variables.procesar_variables(linea):
@@ -35,16 +36,13 @@ def leer_variables(linea):
         return False
 
 def leer_proc(linea):
-
-    reultado = procedimientos.procesar_procedimiento(linea)
-    
-    if resultado:
+    if procedimientos.procesar_procedimiento(linea):
         print(f"Procedimiento registrado: {list(procedimientos.obtener_procedimientos().keys())}")
         return True 
     else:
-        print(f"Error en declaración de procedimiento")
+        print(f"Error en declaración de procedimiento: {linea}")
         return False 
-
+    return True
 
 def leer_asignacion(linea):
     resultado = True
@@ -60,12 +58,6 @@ def leer_asignacion(linea):
     return resultado
 
 def leer_codigo(linea):
-    return True
-
-def es_alfabetico(caracter):
-    return caracter.isalpha()
-
-def es_numerico(caracter):
-    return caracter.isdigit()
+    codigo.reconocer_codigo(linea)
 
 leer_archivo("ejemploPrueba.txt")
