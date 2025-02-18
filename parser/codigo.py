@@ -12,7 +12,8 @@ def reconocer_codigo(linea):
         return reconocer_funcion(linea)
     if token in condiciones_permitidas:
         return reconocer_condicion(linea)
-
+    else:
+        return False
     
 def reconocer_funcion(linea):
     tokens = linea.split(" ")
