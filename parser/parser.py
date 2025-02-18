@@ -3,11 +3,16 @@ import procedimientos as procedimientos
 import codigo
 
 def leer_archivo(ruta):
-    resultado = True;
-    ruta= "parser/" + ruta
+    resultado = True
+    ruta = "parser/" + ruta
     try:
         with open(ruta, 'r') as archivo:
-            return for_para_recursion(archivo)    
+            contenido = archivo.read().strip()
+            if not contenido:
+                print(f"El archivo {ruta} está vacío")
+                return False
+            archivo.seek(0)  # Reset file pointer to the beginning
+            return for_para_recursion(archivo)
     except FileNotFoundError:
         print(f"El archivo en la {ruta} no se encontró")
     except Exception as e:
@@ -44,22 +49,30 @@ def leer_proc(archivo):
     return procedimientos.procesar_procedimiento(archivo, detallado=True)
 
 def leer_asignacion(linea):
-    resultado = True
+    linea = linea.strip()
+
+    if not linea.endswith("."):
+        return False
+
+    linea = linea[:-1].strip()
+
     tokens = linea.split(" ")
 
-    if len(tokens) > 5:
-        resultado = False
+    if len(tokens) != 3:
+        return False
+    
+    variable, operador, valor = tokens
 
-    if len(tokens) < 2 or tokens[-1] != ".":  
-        resultado = False
+    if operador != ":=":
+        return False
+    
+    if not variable.isidentifier():
+        return False
 
-    if len(tokens) > 1 and (tokens[-2] not in variables.obtener_variables() or not tokens[-2].isdigit()):
-        resultado = False  
+    if not valor.isdigit():
+        return False
 
-    if len(tokens) > 4 and tokens[3:5] != [":=", "valor"]:  
-        resultado = False
-
-    return resultado
+    return True
 
 def leer_codigo(linea):
     codigo.reconocer_codigo(linea)
