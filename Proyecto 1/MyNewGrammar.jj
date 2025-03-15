@@ -1,0 +1,170 @@
+options 
+{
+    LOOKAHEAD=1; 
+    IGNORE_CASE=true;
+    STATIC = false;
+}
+
+PARSER_BEGIN(Robot)
+
+package uniandes.lym.robot.control;
+
+import uniandes.lym.robot.kernel.*;
+import uniandes.lym.robot.view.Console;
+import java.awt.Point;
+import java.io.*;
+import java.util.Vector;
+import java.util.LinkedList;
+
+@SuppressWarnings("serial")
+public class Robot 
+{
+    private RobotWorldDec world;
+
+    void setWorld(RobotWorld w) {
+        world = (RobotWorldDec) w; 
+    }
+
+    String salida = new String();
+}
+
+PARSER_END(Robot)
+
+SKIP:
+{
+    " "
+    | "\r"
+    | "\t"
+    | "\n"
+}
+
+TOKEN: /* Comandos */
+{
+    <MOVE: "move">
+    | <RIGHT: "right">
+    | <PUT: "put">
+    | <PICK: "pick">
+    | <POP: "pop">
+    | <HOP: "hop">
+    | <GOTO: "goto">
+    | <PROC: "proc">
+}
+
+TOKEN: /* Control de Flujo */
+{
+    <IF: "if">
+    | <WHILE: "while">
+    | <ELSE: "else">
+    | <DO: "do">
+    | <WITH: "with">
+    | <THEN: "then">
+}
+
+TOKEN: /* Otros */
+{
+    <VAR_DECL: "|">
+    | <ASSIGN: ":=">
+}
+
+TOKEN: /* Direcciones */
+{
+    <DIR_NORTH: "#north">
+    | <DIR_SOUTH: "#south">
+    | <DIR_WEST: "#west">
+    | <DIR_EAST: "#east">
+}
+
+TOKEN: /* Objetos */
+{
+    <CHIPS: "CHIPS">
+    | <BALLOONS: "BALLOONS">
+}
+
+TOKEN: /* Identificadores y Números */
+{
+    <NUMBER: ( ["0"-"9"] )+>
+    | <ID: ( ["a"-"z"] ( ["a"-"z","0"-"9"] )* )>
+}
+
+void Program() : {}
+{
+    ( VarDeclarationBlock() )? 
+    ( ProcedureDeclaration() )* 
+    MainBlock() 
+    <EOF>
+}
+
+void VarDeclarationBlock() : {}
+{
+    <VAR_DECL> ( <ID> )+ <VAR_DECL>
+}
+
+void ProcedureDeclaration() : {
+    Token procName;
+}
+{
+    <PROC> procName=<ID> ProcedureSignature() ProcedureBody()
+}
+
+void ProcedureSignature() : {}
+{
+    ( ":" <ID> ( "and:" <ID> )* )?
+}
+
+void ProcedureBody() : {}
+{
+    "[" InstructionBlock() "]"
+}
+
+void MainBlock() : {}
+{
+    "[" InstructionBlock() "]"
+}
+
+void InstructionBlock() : {}
+{
+    ( LOOKAHEAD(2) Instruction() ( "." Instruction() )* ( "." )? )?
+}
+
+void Instruction() : {}
+{
+    MoveInstruction()
+    | GoToInstruction()
+    | WhileInstruction()
+    | IfInstruction()
+    | Assignment()
+    | ProcedureCall()
+}
+
+void MoveInstruction() : {}
+{
+    <MOVE> <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> ) "."
+}
+
+void GoToInstruction() : {}
+{
+    <GOTO> <NUMBER> "WITH" <NUMBER> "."
+}
+
+void WhileInstruction() : {}
+{
+    <WHILE> "CANMOVE:" <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
+    <DO> "[" InstructionBlock() "]"
+}
+
+void IfInstruction() : {}
+{
+    <IF> "CANMOVE:" <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
+    "THEN" "[" InstructionBlock() "]"
+    ( <ELSE> "[" InstructionBlock() "]" )?
+}
+
+void Assignment() : {}
+{
+    <ID> <ASSIGN> <NUMBER> "."
+}
+
+void ProcedureCall() : {}
+{
+    <ID> ":" <NUMBER> ( "and:" <NUMBER> )* "."
+}
