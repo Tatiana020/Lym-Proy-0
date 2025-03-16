@@ -64,6 +64,9 @@ TOKEN: /* Otros */
 {
     <VAR_DECL: "|">
     | <ASSIGN: ":=">
+    | <IN_DIR: "inDir:">
+    | <CANMOVE: "canMove:">
+    | <AND: "and:">
 }
 
 TOKEN: /* Direcciones */
@@ -108,7 +111,7 @@ void ProcedureDeclaration() : {
 
 void ProcedureSignature() : {}
 {
-    ( ":" <ID> ( "and:" <ID> )* )?
+    ( ":" <ID> ( <AND> <ID> )* )?
 }
 
 void ProcedureBody() : {}
@@ -138,24 +141,24 @@ void Instruction() : {}
 
 void MoveInstruction() : {}
 {
-    <MOVE> <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> ) "."
+    <MOVE> <NUMBER> <IN_DIR> ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> ) "."
 }
 
 void GoToInstruction() : {}
 {
-    <GOTO> <NUMBER> "WITH" <NUMBER> "."
+    <GOTO> <NUMBER> <WITH> <NUMBER> "."
 }
 
 void WhileInstruction() : {}
 {
-    <WHILE> "CANMOVE:" <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
+    <WHILE> <CANMOVE> <NUMBER> <IN_DIR> ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
     <DO> "[" InstructionBlock() "]"
 }
 
 void IfInstruction() : {}
 {
-    <IF> "CANMOVE:" <NUMBER> "inDir:" ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
-    "THEN" "[" InstructionBlock() "]"
+    <IF> <CANMOVE> <NUMBER> <IN_DIR> ( <DIR_NORTH> | <DIR_SOUTH> | <DIR_WEST> | <DIR_EAST> )
+    <THEN> "[" InstructionBlock() "]"
     ( <ELSE> "[" InstructionBlock() "]" )?
 }
 
@@ -166,5 +169,5 @@ void Assignment() : {}
 
 void ProcedureCall() : {}
 {
-    <ID> ":" <NUMBER> ( "and:" <NUMBER> )* "."
+    <ID> ":" <NUMBER> ( <AND> <NUMBER> )* "."
 }
